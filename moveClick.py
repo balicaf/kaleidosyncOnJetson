@@ -4,23 +4,32 @@ from time import sleep
 import os
 import subprocess
 import time
-
+from getmac import get_mac_address as gma
+import socket    
+   
 
 def main():
 
     cmdAgain()
+    print(gma())
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    print(s.getsockname()[0])
+    s.close()
     while 1:
-        print(p.stdout.read(1))
-        if p.stdout.read(1) == b'\x82' or p.stdout.read(1) == "q":
+        char1 = p.stdout.read(1)
+        if char1 != b'':
+            print(char1)
+        if char1 == b'\x82' or char1 == "q" or b'\xe6':
             print("stop")
             moveMouse()
-            p.kill()
-            time.sleep (1)
+            #p.kill()
+            time.sleep (6)
             cmdAgain()
 
 def cmdAgain():
     global p
-    cmd = ["nc", "-ul", "9"]
+    cmd = ["sudo","nc", "-ul", "9"]
     p = subprocess.Popen(cmd,
                         stdout=subprocess.PIPE,
                         stderr=subprocess.STDOUT)            
